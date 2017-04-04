@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<title>Wrecking Balls</title>
+	<script type = "text/javascript" src="../Common/webgl-utils.js"></script>
+	<script type = "text/javascript" src="../Common/initShaders.js"></script>
+	<script type = "text/javascript" src="../Common/MV.js"></script>
+	<script type = "text/javascript" src="../Common/jquery-1.11.1.min.js"></script>
+	<script type = "text/javascript" src="game.js"></script>
+	<script type = "text/javascript" src="wreckingBall.js"></script>
+	<link rel="stylesheet" type="text/css" href="wreckingBall.css">
+
+	<script id="vertex-shader" type="x-shader/x-vertex">
+
+		uniform vec4 lightPosition;
+		uniform vec4 ambientProduct;
+		uniform vec4 diffuseProduct;
+		uniform vec4 specularProduct;
+		uniform float shininess;
+
+		//transformation matrices
+		uniform mat4 model_matrix;
+		uniform mat4 projection;
+
+		//pass texture coordinates through fragment shader
+		varying vec4 fColor;
+		varying vec2 st;
+		attribute vec2 texCoord;
+		attribute vec4 vNormal, vPosition;
+
+		void main() {
+			vec4 pos = model_matrix * vPosition;
+
+			vec3 L = normalize((lightPosition - pos).xyz);
+			vec3 E = normalize((vec4(0,0,10,1)-pos).xyz);
+	   	vec3 H = normalize(L + E);
+    	vec3 N = normalize((model_matrix * vNormal - model_matrix * vec4(0,0,0,1)).xyz);
+
+			float Kd = max(dot(L, N), 0.0);
+	    	float Ks = pow(max(dot(N, H), 0.0), shininess);
+
+			vec4 ambient = ambientProduct;
+			vec4 diffuse = Kd * diffuseProduct;
+			vec4 specular = Ks * specularProduct;
+			if (dot(L, N) < 0.0) 
+				specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+			fColor = ambient + diffuse + specular;
+			fColor.a = 1.0;
+
+			st = texCoord;
+			gl_Position = projection * model_matrix * vPosition;
+		}
+	</script>
+	<script id="fragment-shader" type="x-shader/x-fragment">
+		precision mediump float;
+
+		uniform vec4 vColor;
+		uniform sampler2D texture;
+
+		varying vec2 st;
+		varying vec4 fColor;
+
+		void main() {
+			gl_FragColor = vColor * fColor * texture2D(texture, st); //combine color and texture
+		}
+	</script>
+
+</head>
+
+
+<body>
+	<canvas id="gl-canvas" width="512" height="512">
+		Oops...your browswer doesn't support the HTML5 canvas element
+	</canvas>
+	<img id="texImage" src="texture/chicken.png" hidden></img>
+	<img id="texImage2" src="texture/transparent.png" hidden></img>
+
+	<div id="wrapper">
+		<h2 class="end"></h2>
+		<button id="instructions-button" class="begin" onclick="showInstructions()">INSTRUCTIONS</button><br />
+		<button id="start-button" class="begin" onclick="start()">PLAY</button><br />
+		<button id="restart-button" class="end" onclick="restart()" hidden>PLAY AGAIN</button><br />
+		<button id="newstart-button" class="new" onclick="start()">PLAY</button>
+		<button id="quit-button" class="end" onclick="quit()" hidden>QUIT</button>
+		<button id="next-button" class="continue" onclick="restart()" hidden>NEXT</button>
+
+	</div>
+	<br>
+	<div id="results" hidden>
+		<b id="level"></b>
+		<span id="goal"></span>
+	</div>
+</body>
+</html>

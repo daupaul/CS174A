@@ -1,0 +1,115 @@
+body {
+	margin-top: 50px;
+	font-family: "Comic Sans MS", "Comic Sans", cursive;
+	background-image: url("texture/bricks_bg.jpg");
+	text-align: center;
+}
+
+button {
+	color: white;
+	font-size: 15px;
+	font-family: "Comic Sans MS", "Comic Sans", cursive;
+	margin-bottom: 20px;
+	opacity: 1;
+	width: 130px;
+	height: 45px;
+	border: none;
+	border-radius: 25px;
+}
+
+button.end {
+	opacity: 1;
+	border: 1px solid white;
+}
+
+button:hover {
+	opacity: 0.7;
+}
+
+h1 {
+	font: Impact, Charcoal, sans-serif;
+	font-weight: bold;
+	font-size: 45px;
+	text-shadow: 0px 0px 6px #fff;
+	margin-bottom: 25px;
+	color: #2F4F4F;
+}
+
+h2 {
+	margin-top: 150px;
+	text-shadow: 0px 0px 6px #fff;
+	color: #FFD700;
+	text-shadow:
+	3px 3px 0 #000,
+ 	-1px -1px 0 #000,  
+    1px -1px 0 #000,
+   	-1px 1px 0 #000,
+    1px 1px 0 #000;
+}
+
+#restart-button:hover, #quit-button:hover {
+	opacity: 0.7;
+}
+
+#instructions-button{
+	margin-top: 240px;
+	margin-left: 315px;
+	background-color: #CD5C5C;
+}
+
+#start-button {
+	margin-top: 30px;
+	margin-left: 257px;
+	font-size: 20px;
+	background-color: transparent;	
+}
+
+#restart-button {
+	margin-top: 65px;
+	margin-left: 315px;
+	background-color: #CD5C5C;
+}
+
+#next-button {
+	margin-top: 265px;
+	margin-left: 266px;
+	background-color: transparent;
+}
+#newstart-button {
+	font-size: 20px;
+	margin-top: 300px;
+	margin-left: 257px;
+	background-color: #4B0082;
+}
+
+#quit-button {
+	margin-left: 315px;
+	background-color: #4B0082;
+}
+
+.end {
+	display: none;
+}
+
+#wrapper {
+	margin-top: -440px;
+	position: relative;
+	z-index: 1;
+}
+
+#results {
+	font-size: 25px;
+	margin-top: 361px;
+	display: inline-block;
+	color: #FFD700;
+  	background-color: #191970;
+  	border-radius: 10px;
+  	padding: 0px 12px;
+  	position: relative;
+  	z-index: 1;
+}
+
+#gl-canvas {
+	background: url("texture/newbeach.jpg");
+}
+

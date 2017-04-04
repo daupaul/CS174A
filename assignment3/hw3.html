@@ -1,0 +1,54 @@
+<html>
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="initShaders.js"></script>
+<script type="text/javascript" src="math.js"></script>
+<script type="text/javascript" src="hw3.js"></script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+
+varying vec2 st; 
+uniform sampler2D tex;
+
+void main() {
+
+	vec4 fColor = texture2D(tex, st); //combine color and texture
+	gl_FragColor = fColor; 
+
+}
+</script>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+//cube data vecters
+attribute vec3 vPosition;
+
+//pass texture coordinates through fragment shader
+attribute vec2 texCoord;
+varying vec2 st;
+
+//transformation matrices
+uniform mat4 model_matrix;
+uniform mat4 projection;
+
+varying vec4 fColor;
+
+void main() {
+	
+    vec3 pos = (model_matrix * vec4(vPosition, 1.0)).xyz;
+	st = texCoord;
+	gl_Position = projection * vec4(pos, 1.0);
+
+} 
+</script>
+
+<body>
+<canvas id="gl-canvas" width="960" height="540">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+   
+
+</body>
+</html>

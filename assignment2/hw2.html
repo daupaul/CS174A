@@ -1,0 +1,93 @@
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+//Gouraud shading-per vertex
+uniform bool perVertex; 
+
+attribute vec3 vPosition;
+attribute vec3 vNormal;
+
+//transformation matrix
+uniform mat4 model_matrix;
+uniform mat4 pMatrix;
+uniform mat4 light_matrix;
+
+uniform vec3 l_position;
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform float shininess;
+varying vec3 N, L, E;
+varying vec4 fColor;
+
+void main() {
+	
+	//get the position of light in world
+    vec3 pos = (model_matrix * vec4(vPosition, 1.0)).xyz;
+	vec3 light = (light_matrix * vec4(l_position, 1.0)).xyz;
+    L = normalize(light - pos); 
+    E = normalize(-pos);	
+    N = normalize(-model_matrix * vec4(vNormal, 0.0)).xyz; 
+
+	gl_Position = pMatrix * vec4(pos, 1.0);
+	
+	//if Gouraud shading is enabled
+	if(perVertex) {
+		vec3 H = normalize(L + E);
+		vec4 ambient = ambientProduct;
+		float kd = max(dot(L, N), 0.0); //float kd = abs(dot(L, N));
+		vec4 diffuse = kd * diffuseProduct;
+		float ks = pow(max(dot(N, H), 0.0), shininess); //float ks = pow(abs(dot(N, H)), shininess);
+		vec4 specular = ks * specularProduct;
+		fColor = ambient + diffuse + specular;
+		fColor.a  = 1.0;
+	}
+	
+} 
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+//Phong shading
+uniform bool perFragment;
+
+precision mediump float;
+
+uniform vec4 ambientProduct2, diffuseProduct2, specularProduct2; //product of light and surface constant
+uniform float shininess2;
+varying vec3 N, L, E;
+varying vec4 fColor;
+
+void main() {
+
+	//if Phong shading is enabled
+	if(perFragment) {
+		vec4 fColor;
+		vec3 H = normalize(L + E);
+		vec4 ambient = ambientProduct2;
+		float kd = max(dot(L, N), 0.0);
+		vec4 diffuse = kd * diffuseProduct2;
+		float ks = pow(max(dot(N, H), 0.0), shininess2);
+		vec4 specular = ks * specularProduct2;
+		fColor = ambient + diffuse + specular;
+		fColor.a  = 1.0;
+		
+		gl_FragColor = fColor;
+		
+	}
+	else {
+		gl_FragColor = fColor;
+	}
+	
+}
+</script>
+
+<script type="text/javascript" src="webgl-utils.js"></script>
+<script type="text/javascript" src="initShaders.js"></script>
+<script type="text/javascript" src="math.js"></script>
+<script type="text/javascript" src="hw2.js"></script>
+
+<body>
+<canvas id="gl-canvas" width="960" height="540">
+Oops ... your browser doesn't support the HTML5 canvas element
+</canvas>
+</body>
+</html>
